@@ -1,0 +1,48 @@
+@model FitnessCenter.Web.Models.Appointment
+@{
+    ViewData["Title"] = "Randevu Onayla";
+}
+
+<h2>Randevu Onayla</h2>
+<h3>Bu randevuyu onaylamak istediğinize emin misiniz?</h3>
+<hr />
+
+<dl class="row">
+                    <dt class="col-sm-3">Tarih</dt>
+                    <dd class="col-sm-9">@Model.AppointmentDate.ToString("yyyy-MM-dd")</dd>
+
+                    <dt class="col-sm-3">Saat</dt>
+                    <dd class="col-sm-9">@Model.AppointmentTime.ToString(@"hh\:mm")</dd>
+
+                    <dt class="col-sm-3">Spor Salonu</dt>
+                    <dd class="col-sm-9">@(Model.Gym?.Name ?? "Yok")</dd>
+
+                    <dt class="col-sm-3">Antrenör</dt>
+                    <dd class="col-sm-9">@(Model.Trainer?.FullName ?? "Yok")</dd>
+
+                    <dt class="col-sm-3">Hizmet</dt>
+                    <dd class="col-sm-9">@(Model.Service?.Name ?? "Yok")</dd>
+
+                    <dt class="col-sm-3">Üye</dt>
+                    <dd class="col-sm-9">@(Model.Member != null ? $"{Model.Member.FirstName} {Model.Member.LastName}" : "Yok")</dd>
+
+                    <dt class="col-sm-3">Fiyat</dt>
+                    <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+
+                    <dt class="col-sm-3">Süre</dt>
+                    <dd class="col-sm-9">@Model.DurationMinutes dakika</dd>
+
+                    <dt class="col-sm-3">Durum</dt>
+    <dd class="col-sm-9">
+        <span class="badge bg-warning">@Model.Status</span>
+    </dd>
+</dl>
+
+<form asp-action="Approve" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Onayla" class="btn btn-success" />
+        <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+    </div>
+</form>
+

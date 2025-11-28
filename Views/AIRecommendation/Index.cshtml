@@ -1,0 +1,141 @@
+@model FitnessCenter.Web.ViewModels.AIRecommendationViewModel
+@{
+    ViewData["Title"] = "Yapay Zeka Önerileri";
+}
+
+<div class="container">
+    <h2 class="mb-4">🏋️ Yapay Zeka ile Kişisel Öneriler</h2>
+    <p class="lead">Fotoğraf yükleyerek veya vücut ölçülerinizi girerek size özel egzersiz ve diyet planı alın.</p>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Bilgilerinizi Girin</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-4">
+                            <h5>📸 Yöntem 1: Fotoğraf Yükle</h5>
+                            <div class="mb-3">
+                                <label asp-for="Photo" class="form-label">Vücut Fotoğrafı Yükle</label>
+                                <input asp-for="Photo" type="file" class="form-control" accept="image/*" />
+                                <small class="form-text text-muted">Fotoğrafınızı yükleyerek analiz yapabilirsiniz.</small>
+                                <span asp-validation-for="Photo" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="mb-4">
+                            <h5>📏 Yöntem 2: Ölçülerinizi Girin</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Height" class="form-label">Boy (cm)</label>
+                                    <input asp-for="Height" class="form-control" type="number" min="50" max="250" step="0.1" placeholder="Örn: 175" />
+                                    <span asp-validation-for="Height" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Weight" class="form-label">Kilo (kg)</label>
+                                    <input asp-for="Weight" class="form-control" type="number" min="20" max="300" step="0.1" placeholder="Örn: 70" />
+                                    <span asp-validation-for="Weight" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="BodyType" class="form-label">Vücut Tipi</label>
+                                <select asp-for="BodyType" class="form-select">
+                                    <option value="">-- Seçiniz --</option>
+                                    <option value="Ektomorf">Ektomorf (Zayıf, uzun)</option>
+                                    <option value="Mezomorf">Mezomorf (Atletik, kaslı)</option>
+                                    <option value="Endomorf">Endomorf (Yuvarlak, yumuşak)</option>
+                                </select>
+                                <span asp-validation-for="BodyType" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="FitnessGoals" class="form-label">Fitness Hedefleri</label>
+                                <textarea asp-for="FitnessGoals" class="form-control" rows="3" placeholder="Örn: Kilo vermek, kas kütlesi artırmak, genel sağlık..."></textarea>
+                                <span asp-validation-for="FitnessGoals" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="alert alert-danger">
+                                @Model.ErrorMessage
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-robot"></i> Önerileri Al
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5>💡 Nasıl Çalışır?</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">📸 <strong>Fotoğraf:</strong> Vücut fotoğrafınızı yükleyin</li>
+                        <li class="mb-2">📏 <strong>Ölçüler:</strong> Boy, kilo ve vücut tipinizi girin</li>
+                        <li class="mb-2">🎯 <strong>Hedefler:</strong> Fitness hedeflerinizi belirtin</li>
+                        <li class="mb-2">🤖 <strong>AI Analiz:</strong> Yapay zeka size özel plan oluşturur</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ExerciseRecommendations) || !string.IsNullOrEmpty(Model.DietSuggestions))
+    {
+        <div class="row mt-4">
+            @if (!string.IsNullOrEmpty(Model.ExerciseRecommendations))
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            <h4>💪 Egzersiz Önerileri</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="whitespace-pre-line">@Model.ExerciseRecommendations</div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.DietSuggestions))
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-white">
+                            <h4>🥗 Diyet Önerileri</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="whitespace-pre-line">@Model.DietSuggestions</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .whitespace-pre-line {
+        white-space: pre-line;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

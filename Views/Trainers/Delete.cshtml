@@ -1,0 +1,38 @@
+@model FitnessCenter.Web.Models.Trainer
+@{
+    ViewData["Title"] = "Antrenör Sil";
+}
+
+<h2>Antrenör Sil</h2>
+<h3 class="text-danger">Bu antrenörü silmek istediğinize emin misiniz?</h3>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Ad Soyad</dt>
+    <dd class="col-sm-9"><strong>@Model.FullName</strong></dd>
+
+    <dt class="col-sm-3">Spor Salonu</dt>
+    <dd class="col-sm-9">@(Model.Gym?.Name ?? "Yok")</dd>
+
+    <dt class="col-sm-3">Uzmanlık Alanları</dt>
+    <dd class="col-sm-9">@(Model.Specializations ?? "Belirtilmemiş")</dd>
+
+    <dt class="col-sm-3">Hizmet Sayısı</dt>
+    <dd class="col-sm-9">@Model.TrainerServices.Count</dd>
+</dl>
+
+@if (Model.Appointments.Any())
+{
+    <div class="alert alert-warning">
+        <strong>Uyarı:</strong> Bu antrenöre @Model.Appointments.Count randevu kayıtlıdır. Antrenörü silerseniz, bu randevular da etkilenebilir.
+    </div>
+}
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Sil" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </div>
+</form>
+

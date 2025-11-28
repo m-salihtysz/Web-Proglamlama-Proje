@@ -1,0 +1,81 @@
+@model FitnessCenter.Web.Models.Appointment
+@{
+    ViewData["Title"] = "Randevu Detayları";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<h2>Randevu Detayları</h2>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Tarih</dt>
+    <dd class="col-sm-9">@Model.AppointmentDate.ToString("yyyy-MM-dd")</dd>
+
+    <dt class="col-sm-3">Saat</dt>
+    <dd class="col-sm-9">@Model.AppointmentTime.ToString(@"hh\:mm")</dd>
+
+    <dt class="col-sm-3">Spor Salonu</dt>
+    <dd class="col-sm-9">@(Model.Gym?.Name ?? "Yok")</dd>
+
+    <dt class="col-sm-3">Antrenör</dt>
+    <dd class="col-sm-9">@(Model.Trainer?.FullName ?? "Yok")</dd>
+
+    <dt class="col-sm-3">Hizmet</dt>
+    <dd class="col-sm-9">@(Model.Service?.Name ?? "Yok")</dd>
+
+    @if (isAdmin)
+    {
+        <dt class="col-sm-3">Üye</dt>
+        <dd class="col-sm-9">@(Model.Member != null ? $"{Model.Member.FirstName} {Model.Member.LastName}" : "Yok")</dd>
+    }
+
+    <dt class="col-sm-3">Fiyat</dt>
+    <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+
+    <dt class="col-sm-3">Süre</dt>
+    <dd class="col-sm-9">@Model.DurationMinutes dakika</dd>
+
+    <dt class="col-sm-3">Durum</dt>
+    <dd class="col-sm-9">
+        <span class="badge @(Model.Status switch {
+            AppointmentStatus.Approved => "bg-success",
+            AppointmentStatus.Pending => "bg-warning",
+            AppointmentStatus.Rejected => "bg-danger",
+            AppointmentStatus.Cancelled => "bg-secondary",
+            AppointmentStatus.Completed => "bg-info",
+            _ => "bg-secondary"
+        })">
+            @(Model.Status switch {
+                AppointmentStatus.Approved => "Onaylandı",
+                AppointmentStatus.Pending => "Beklemede",
+                AppointmentStatus.Rejected => "Reddedildi",
+                AppointmentStatus.Cancelled => "İptal Edildi",
+                AppointmentStatus.Completed => "Tamamlandı",
+                _ => Model.Status.ToString()
+            })
+        </span>
+    </dd>
+
+    <dt class="col-sm-3">Oluşturulma Tarihi</dt>
+    <dd class="col-sm-9">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+    @if (Model.ApprovedAt.HasValue)
+    {
+        <dt class="col-sm-3">Onaylanma Tarihi</dt>
+        <dd class="col-sm-9">@Model.ApprovedAt.Value.ToString("yyyy-MM-dd HH:mm")</dd>
+    }
+</dl>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+    @if (isAdmin && Model.Status == AppointmentStatus.Pending)
+    {
+        <a asp-action="Approve" asp-route-id="@Model.Id" class="btn btn-success">Onayla</a>
+        <a asp-action="Reject" asp-route-id="@Model.Id" class="btn btn-danger">Reddet</a>
+    }
+    @if (!isAdmin && Model.Status != AppointmentStatus.Cancelled && Model.Status != AppointmentStatus.Completed)
+    {
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Randevuyu İptal Et</a>
+    }
+</div>
+

@@ -1,0 +1,78 @@
+@model FitnessCenter.Web.ViewModels.TrainerViewModel
+@{
+    ViewData["Title"] = "Antrenör Düzenle";
+    var services = ViewBag.Services as List<FitnessCenter.Web.Models.Service> ?? new List<FitnessCenter.Web.Models.Service>();
+}
+
+<h2>Antrenör Düzenle</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="GymId" class="form-label"></label>
+                <select asp-for="GymId" asp-items="ViewBag.GymId" class="form-select">
+                    <option value="">-- Spor Salonu Seçin --</option>
+                </select>
+                <span asp-validation-for="GymId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Specializations" class="form-label"></label>
+                <textarea asp-for="Specializations" class="form-control" rows="3" placeholder="Örn: Kas geliştirme, kilo verme, yoga, pilates..."></textarea>
+                <span asp-validation-for="Specializations" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="AvailableHours" class="form-label"></label>
+                <input asp-for="AvailableHours" class="form-control" placeholder="Örn: Pazartesi, Çarşamba, Cuma" />
+                <small class="form-text text-muted">Müsait olduğu günleri belirtin (virgülle ayırın)</small>
+                <span asp-validation-for="AvailableHours" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ServiceIds" class="form-label"></label>
+                <div class="border p-3" style="max-height: 200px; overflow-y: auto;">
+                    @foreach (var service in services)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="ServiceIds" value="@service.Id" id="service_@service.Id" 
+                                   @(Model.ServiceIds.Contains(service.Id) ? "checked" : "") />
+                            <label class="form-check-label" for="service_@service.Id">
+                                @service.Name - @service.Price.ToString("C") (@service.DurationMinutes dakika)
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+                <a asp-action="Index" class="btn btn-secondary">İptal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

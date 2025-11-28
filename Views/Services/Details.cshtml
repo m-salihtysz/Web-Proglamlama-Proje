@@ -1,0 +1,31 @@
+@model FitnessCenter.Web.Models.Service
+@{
+    ViewData["Title"] = "Hizmet Detayları";
+}
+
+<h2>Hizmet Detayları</h2>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Hizmet Adı</dt>
+    <dd class="col-sm-9"><strong>@Model.Name</strong></dd>
+
+    <dt class="col-sm-3">Spor Salonu</dt>
+    <dd class="col-sm-9">@(Model.Gym?.Name ?? "Yok")</dd>
+
+    <dt class="col-sm-3">Açıklama</dt>
+    <dd class="col-sm-9">@(Model.Description ?? "Açıklama yok")</dd>
+
+    <dt class="col-sm-3">Süre</dt>
+    <dd class="col-sm-9">@Model.DurationMinutes dakika</dd>
+
+    <dt class="col-sm-3">Fiyat</dt>
+    <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+</dl>
+
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Düzenle</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Sil</a>
+    <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+</div>
+

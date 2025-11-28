@@ -1,0 +1,39 @@
+@model FitnessCenter.Web.Models.Service
+@{
+    ViewData["Title"] = "Hizmet Sil";
+}
+
+<h2>Hizmet Sil</h2>
+<h3 class="text-danger">Bu hizmeti silmek istediğinize emin misiniz?</h3>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Hizmet Adı</dt>
+    <dd class="col-sm-9"><strong>@Model.Name</strong></dd>
+
+    <dt class="col-sm-3">Spor Salonu</dt>
+    <dd class="col-sm-9">@(Model.Gym?.Name ?? "Yok")</dd>
+
+    <dt class="col-sm-3">Süre</dt>
+    <dd class="col-sm-9">@Model.DurationMinutes dakika</dd>
+
+    <dt class="col-sm-3">Fiyat</dt>
+    <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+</dl>
+
+@if (Model.TrainerServices.Any() || Model.Appointments.Any())
+{
+    <div class="alert alert-warning">
+        <strong>Uyarı:</strong> Bu hizmet @Model.TrainerServices.Count antrenör tarafından veriliyor ve @Model.Appointments.Count randevu kayıtlıdır. 
+        Hizmeti silerseniz, bu veriler de etkilenebilir.
+    </div>
+}
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Sil" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </div>
+</form>
+
